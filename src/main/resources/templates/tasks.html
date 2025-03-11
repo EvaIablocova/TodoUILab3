@@ -41,50 +41,60 @@
                 <!-- Page Heading -->
                 <h1 class="h3 mb-2 text-gray-800">Tasks</h1>
 
-<!--                <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addUserModal">-->
-<!--                    Add User-->
-<!--                </button>-->
+                <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addTaskModal">
+                    Add Task
+                </button>
 
-<!--                <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">-->
-<!--                    <div class="modal-dialog" role="document">-->
-<!--                        <div class="modal-content">-->
-<!--                            <div class="modal-header">-->
-<!--                                <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>-->
-<!--                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                                    <span aria-hidden="true">&times;</span>-->
-<!--                                </button>-->
-<!--                            </div>-->
-<!--                            <div class="modal-body">-->
-<!--                                <form id="addUserForm">-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label for="role">Role</label>-->
-<!--                                        <select id="role" name="role">-->
-<!--                                            <option>Customer</option>-->
-<!--                                            <option>Guest</option>-->
-<!--                                            <option>Admin</option>-->
-<!--                                        </select>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label for="username">Username</label>-->
-<!--                                        <input type="text" class="form-control" id="username" name="username" required>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label for="email">Email</label>-->
-<!--                                        <input type="email" class="form-control" id="email" name="email" required>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label for="password">Password</label>-->
-<!--                                        <input type="password" class="form-control" id="password" name="password" required>-->
-<!--                                    </div>-->
-<!--                                </form>-->
-<!--                            </div>-->
-<!--                            <div class="modal-footer">-->
-<!--                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-<!--                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="addUserButton">Add User</button>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <div class="modal fade" id="addTaskModal" tabindex="-1" role="dialog" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addTaskModalLabel">Add New Task</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+                                <form id="addTaskForm">
+                                    <div class="form-group">
+                                        <label for="title">Title</label>
+                                        <input type="text" class="form-control" id="title" name="title" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <input type="text" class="form-control" id="description" name="description" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="status">Status</label>
+                                        <select id="status" name="status">
+                                            <option>NEW</option>
+                                            <option>IN_PROGRESS</option>
+                                            <option>COMPLETED</option>
+                                            <option>CANCELLED</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="priority">Priority</label>
+                                        <select id="priority" name="priority">
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="assignedTo">Assigned to</label>
+                                        <input type="text" class="form-control" id="assignedTo" name="assignedTo" required>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="addTaskButton">Add Task</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
                 <!-- DataTales Example -->
@@ -104,6 +114,7 @@
                                     <th>Status</th>
                                     <th>Delete</th>
                                     <th>Update</th>
+                                    <th>View details</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -114,8 +125,8 @@
                                     <td th:text="${task.priority}" class="editable" data-field="priority"></td>
                                     <td th:text="${task.status}" class="editable" data-field="status"></td>
                                     <td>
-
                                         <form th:action="@{/tasks/delete/{id}(id=${task.id})}" method="post" style="display:inline;">
+                                            <input type="hidden" name="_method" value="DELETE">
                                             <button type="submit" class="btn btn-danger btn-circle">
                                                 <i class="fas fa-trash"></i>
                                             </button>
@@ -130,6 +141,13 @@
                                         <button class="btn btn-success btn-circle save-button" th:data-id="${task.id}" style="display: none;">
                                             <i class="fas fa-check"></i>
                                         </button>
+                                    </td>
+                                    <td>
+                                        <form th:action="@{/tasks/{id}(id=${task.id})}" method="get" style="display:inline;">
+                                            <button type="submit" class="btn btn-info btn-circle">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -182,25 +200,26 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const addUserButton = document.getElementById("addUserButton");
-        const addUserForm = document.getElementById("addUserForm");
+        const addTaskButton = document.getElementById("addTaskButton");
+        const addTaskForm = document.getElementById("addTaskForm");
 
-        addUserButton.addEventListener("click", function () {
-            const formData = new FormData(addUserForm);
-            const userDTO = {
+        addTaskButton.addEventListener("click", function () {
+            const formData = new FormData(addTaskForm);
+            const taskDTO = {
                 id: 0,
-                role: formData.get("role"),
-                username: formData.get("username"),
-                email: formData.get("email"),
-                password: formData.get("password")
+                title: formData.get("title"),
+                description: formData.get("description"),
+                status: formData.get("status"),
+                priority: formData.get("priority"),
+                assignedTo: formData.get("assignedTo")
             };
 
-            fetch("/users/create", {
+            fetch("/tasks/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(userDTO)
+                body: JSON.stringify(taskDTO)
             })
                 .then(response => {
                     if (!response.ok) {
@@ -210,8 +229,8 @@
                 })
                 .then(data => {
                     console.log("Заказ успешно создан:", data);
-                    addUserForm.reset(); // Очистить форму
-                    $("#addUserModal").modal("hide"); // Закрыть модальное окно
+                    addTaskForm.reset(); // Очистить форму
+                    $("#addTaskModal").modal("hide"); // Закрыть модальное окно
                     location.reload();
                 })
                 .catch(error => console.error("Ошибка запроса:", error));
@@ -285,7 +304,6 @@
 
 
 </script>
-
 
 </body>
 

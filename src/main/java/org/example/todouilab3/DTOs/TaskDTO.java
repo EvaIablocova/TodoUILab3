@@ -3,7 +3,6 @@ package org.example.todouilab3.DTOs;
 import lombok.Data;
 import lombok.Getter;
 
-@Getter
 @Data
 public class TaskDTO {
 

@@ -1,9 +1,12 @@
 package org.example.todouilab3.controllers;
 
+import org.example.todouilab3.DTOs.EnumConverter;
 import org.example.todouilab3.DTOs.TaskDTO;
+import org.example.todouilab3.DTOs.TaskStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +37,7 @@ public class UiController {
     }
 
     @PostMapping("/create")
+//    public String createTask(@ModelAttribute TaskDTO taskDTO) {
     public String createTask(@RequestBody TaskDTO taskDTO) {
         TaskDTO task = uiRestController.createTask(taskDTO);
         return "redirect:/tasks";
@@ -50,4 +54,11 @@ public class UiController {
         uiRestController.deleteTask(id);
         return "redirect:/tasks";
     }
+
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(TaskStatus.class, new EnumConverter(TaskStatus.class));
+    }
+
 }
